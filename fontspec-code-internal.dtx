@@ -815,6 +815,8 @@
 % \end{macro}
 %
 % \begin{macro}{\@@_declare_shapes_smcaps:nn}
+% We set up a smallcaps font if it has been provided. If the current shape
+% is `it', we also set up a `slsc -> itsc` substitution, like in \verb|\@@_declare_shape_slanted:nn|.
 %    \begin{macrocode}
 \cs_new:Nn \@@_declare_shapes_smcaps:nn
   {
@@ -822,6 +824,15 @@
      {
       \@@_DeclareFontShape:xxxxxx {\g_@@_nfss_enc_tl} {\g_@@_nfss_family_tl} {#1}
         { \@@_combo_sc_shape:n {#2} } {\l_@@_nfss_sc_tl} {\l_@@_postadjust_tl}
+      \bool_if:nT
+        {
+            \str_if_eq_p:ee {#2} {\itdefault}  &&
+          !(\str_if_eq_p:ee {\itscdefault} {\slscdefault})
+        }
+        {
+          \@@_DeclareFontShape:xxxxxx {\g_@@_nfss_enc_tl}{\g_@@_nfss_family_tl}{#1}{\slscdefault}
+            {<->ssub*\g_@@_nfss_family_tl/#1/\itscdefault}{\l_@@_postadjust_tl}
+        }
      }
   }
 %    \end{macrocode}
